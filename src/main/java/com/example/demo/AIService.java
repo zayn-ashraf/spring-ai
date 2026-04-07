@@ -5,7 +5,9 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.converter.ListOutputConverter;
+import org.springframework.ai.converter.MapOutputConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +52,44 @@ public class AIService {
         Prompt prompt = promptTemplate.create(Map.of("artist",artist,"format",format));
         ChatResponse response = chatClient.prompt(prompt).call().chatResponse();
         return converter.convert(response.getResult().getOutput().getText());
+    }
+
+    public Map<String, Object> getServices(String bank) {
+        String message = """
+                Generate a JSON for a bank.
+                
+                - "bank": {bank} \s
+                - "services": list like Retail Banking, Investment Banking, etc.) \s
+                - Each category should contain service name as key and short description as value \s
+                
+                Return only valid JSON.
+                {format}
+                """;
+        MapOutputConverter converter = new MapOutputConverter();
+        String format = converter.getFormat();
+        PromptTemplate promptTemplate = new PromptTemplate(message);
+        Prompt prompt =  promptTemplate.create(Map.of("bank", bank, "format", format));
+
+        return converter.convert(chatClient.prompt(prompt).call().chatResponse().getResult().getOutput().getText());
+    }
+
+
+    public Bank getTheServices(String bank){
+        String message = """
+                Generate a JSON for a bank.
+                
+                - "bank": {bank} \s
+                - "services": list like Retail Banking, Investment Banking, etc.) \s
+                - Each category should contain service name as key and short description as value \s
+                
+                Return only valid JSON.
+                {format}
+                """;
+        var converter = new BeanOutputConverter<>(Bank.class);
+        String format = converter.getFormat();
+        PromptTemplate promptTemplate = new PromptTemplate(message);
+        Prompt prompt =  promptTemplate.create(Map.of("bank", bank, "format", format));
+
+        return converter.convert(chatClient.prompt(prompt).call().chatResponse().getResult().getOutput().getText());
     }
 }
