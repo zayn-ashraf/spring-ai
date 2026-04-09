@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.controllers;
 
-import org.springframework.ai.chat.client.ChatClient;
+import com.example.demo.services.AIService;
+import com.example.demo.Bank;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,5 +38,4 @@ public class AiModelsController {
     private Bank getServices(@RequestParam(value = "bank", defaultValue = "Jp Morgan Chase")String bank){
         return aiService.getTheServices(bank);
     }
-
 }
