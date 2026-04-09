@@ -1,0 +1,2 @@
+Below are the models till 2026 :
+GPT-5.4 (OpenAI), Claude 4 Opus/Sonnet (Anthropic), Gemini 3.1 Pro (Google), Llama 4 (Meta), and Grok 4 (xAI)
